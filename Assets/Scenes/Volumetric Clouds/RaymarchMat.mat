@@ -51,7 +51,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _darknessThreshold: 0.15
-    - _densityScale: 0.14
+    - _densityScale: 0.04
     - _lightAbsorb: 2.02
     - _lightStepSize: 0.06
     - _numLightSteps: 16
