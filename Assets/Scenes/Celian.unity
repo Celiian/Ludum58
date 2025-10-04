@@ -268,6 +268,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2034863473}
     - target: {fileID: 2062832743886062038, guid: 5b003cc6e57bf8441acf22254742cf41, type: 3}
+      propertyPath: reflectionPlaneOffset
+      value: 0.81
+      objectReference: {fileID: 0}
+    - target: {fileID: 2062832743886062038, guid: 5b003cc6e57bf8441acf22254742cf41, type: 3}
       propertyPath: reflectionLayer.m_Bits
       value: 39
       objectReference: {fileID: 0}
