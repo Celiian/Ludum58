@@ -502,7 +502,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1285739802
@@ -568,7 +568,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -24.19318, y: 0.41120222, z: 3.4981084}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalScale: {x: 50, y: 1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -581,37 +581,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 497965777695018205, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.531643
+      value: -4.5264597
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.53
+      value: 20.055342
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.4756894
+      value: -1.4756905
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.70665914
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.025157828
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: -0.70665914
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.025157832
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 4.078
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -624,6 +628,58 @@ PrefabInstance:
     - target: {fileID: 3196195894336418047, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_Name
       value: Airplane
+      objectReference: {fileID: 0}
+    - target: {fileID: 3196195894336418047, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 3427537408526264856, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 4805792548033260803, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 6310278019280771505, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098323277101228086, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643893750236438438, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 8191161158817917285, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: maxThrottle
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8191161158817917285, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: maxRollAngle
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8191161158817917285, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: levelReturnSpeed
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8191161158817917285, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: rollCorrectionStrength
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8558416272926470254, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Mass
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700301243169912626, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 9022304984673002407, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
+      propertyPath: m_Layer
+      value: 28
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
