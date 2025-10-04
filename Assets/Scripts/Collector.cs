@@ -19,11 +19,9 @@ public class Collector : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Collector: " + other.gameObject.name);
             if (material != null)
             {
                 material.SetFloat(colorName, 1.0f);
-                Debug.Log("Collector: " + colorName);
             }
             // Destroy(gameObject);
         }
