@@ -180,7 +180,7 @@ Material:
     - _ShoreFade_Smoothness: 0.353
     - _Specular_Hardness: 0
     - _Specular_Size: 0
-    - _Specular_Spread: 0
+    - _Specular_Spread: 0.1
     - _Specular_Strength: 29.1
     - _SrcBlend: 5
     - _SurfFoam_AlphaBlend: 0
@@ -203,7 +203,7 @@ Material:
     - _1st_Wave_Direction: {r: 1, g: 0, b: 0, a: 0}
     - _2nd_Wave_Direction: {r: -1, g: 0, b: 1, a: 0}
     - _Color_Deep: {r: 0, g: 0.2541522, b: 0.4507858, a: 0.7019608}
-    - _Color_Shallow: {r: 0.2269659, g: 0.822786, b: 0.4507858, a: 0}
+    - _Color_Shallow: {r: 0.2269659, g: 0.822786, b: 0.4507858, a: 1}
     - _InterSec_Color: {r: 1, g: 1, b: 1, a: 1}
     - _InterSec_Foam_Pan: {r: 0, g: 0, b: 0, a: 0}
     - _InterSec_Foam_Tile: {r: 1, g: 1, b: 0, a: 0}
