@@ -28,7 +28,6 @@ Material:
   - _ENABLECAUSTICS
   - _ENABLENORMAL
   - _ENABLEPLANERREFLECTION
-  - _ENABLEREFRACTION
   m_InvalidKeywords:
   - _ENVIRONMENTREFLECTIONS_OFF
   - _SURFACE_TYPE_TRANSPARENT
@@ -127,7 +126,7 @@ Material:
     - _ENABLEINTERSECTION: 0
     - _ENABLENORMAL: 1
     - _ENABLEPLANERREFLECTION: 1
-    - _ENABLEREFRACTION: 1
+    - _ENABLEREFRACTION: 0
     - _ENABLESHORELINE: 0
     - _ENABLESURFACEFOAM: 0
     - _ENABLEWAVE: 0
@@ -152,7 +151,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Reflection_Distortion: 1
-    - _Reflection_Fresnel: 5
+    - _Reflection_Fresnel: 3
     - _Reflection_Strength: 1
     - _Refraction_Distance_Fade: 0.5
     - _Refraction_Distance_Strength: 0.1
@@ -202,8 +201,8 @@ Material:
     m_Colors:
     - _1st_Wave_Direction: {r: 1, g: 0, b: 0, a: 0}
     - _2nd_Wave_Direction: {r: -1, g: 0, b: 1, a: 0}
-    - _Color_Deep: {r: 0, g: 0.2541522, b: 0.4507858, a: 0.7019608}
-    - _Color_Shallow: {r: 0.2269659, g: 0.822786, b: 0.4507858, a: 1}
+    - _Color_Deep: {r: 0, g: 0.16529945, b: 0.2924528, a: 0.94509804}
+    - _Color_Shallow: {r: 0.22745097, g: 0.8235294, b: 0.39469543, a: 1}
     - _InterSec_Color: {r: 1, g: 1, b: 1, a: 1}
     - _InterSec_Foam_Pan: {r: 0, g: 0, b: 0, a: 0}
     - _InterSec_Foam_Tile: {r: 1, g: 1, b: 0, a: 0}

@@ -3,6 +3,9 @@ using UnityEngine.InputSystem;
 
 public class PlaneController : MonoBehaviour
 {
+
+    public Animator animator;
+
     [Header("Input")]
     [Tooltip("The Input Action Asset containing plane controls")]
     public InputActionAsset inputActions;
@@ -154,6 +157,13 @@ public class PlaneController : MonoBehaviour
             float overshoot = Mathf.Abs(currentRollAngle) - correctionThreshold;
             float rollCorrection = -Mathf.Sign(currentRollAngle) * overshoot * responseModifier * rollCorrectionStrength;
             rb.AddTorque(transform.forward * rollCorrection);
+        }
+        
+        // Update animation speed based on plane speed
+        if (animator != null)
+        {
+            float planeSpeed = rb.linearVelocity.magnitude;
+            animator.SetFloat("FlySpeed", planeSpeed );
         }
         // Add stabilization forces to return to horizontal when no yaw input
         //Abs of currentYaw in't enough apparently for the condition to be true despite being correct when logged
