@@ -28,7 +28,6 @@ Material:
   - _ENABLECAUSTICS
   - _ENABLENORMAL
   - _ENABLEPLANERREFLECTION
-  - _ENABLEREFRACTION
   m_InvalidKeywords:
   - _ENVIRONMENTREFLECTIONS_OFF
   - _SURFACE_TYPE_TRANSPARENT
@@ -127,7 +126,7 @@ Material:
     - _ENABLEINTERSECTION: 0
     - _ENABLENORMAL: 1
     - _ENABLEPLANERREFLECTION: 1
-    - _ENABLEREFRACTION: 1
+    - _ENABLEREFRACTION: 0
     - _ENABLESHORELINE: 0
     - _ENABLESURFACEFOAM: 0
     - _ENABLEWAVE: 0
@@ -152,7 +151,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Reflection_Distortion: 1
-    - _Reflection_Fresnel: 5
+    - _Reflection_Fresnel: 3
     - _Reflection_Strength: 1
     - _Refraction_Distance_Fade: 0.5
     - _Refraction_Distance_Strength: 0.1
