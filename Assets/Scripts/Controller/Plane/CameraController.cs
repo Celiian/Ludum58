@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour
     
     private int index = 0;
     private Vector3 target;
+    private int previousIndex = -1;
 
     private bool cameraLocked = true;
 
@@ -25,6 +26,14 @@ public class CameraController : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.Alpha3)) index = 2;
         else if(Input.GetKeyDown(KeyCode.Alpha4)) index = 3;
 
+        // If camera position changed, instantly snap to new position
+        if(index != previousIndex)
+        {
+            transform.position = cameraPositions[index].position;
+            transform.forward = cameraPositions[index].forward;
+            previousIndex = index;
+        }
+
         // set our target to the relevant POV
         target = cameraPositions[index].position;
 
@@ -34,6 +43,7 @@ public class CameraController : MonoBehaviour
     public void SwitchToGameplayCamera()
     {
         index = 0;
+        previousIndex = -1; // Force instant snap
         target = cameraPositions[index].position;
         cameraLocked = false;
     }
@@ -41,7 +51,9 @@ public class CameraController : MonoBehaviour
     private void FixedUpdate()
     {
         if(cameraLocked) return;
-        transform.position = Vector3.Lerp(transform.position, target, moveSpeed * Time.deltaTime);
+        Vector3 newPosition = Vector3.Lerp(transform.position, target, moveSpeed * Time.deltaTime);
+        newPosition.y = Mathf.Max(newPosition.y, 2f);
+        transform.position = newPosition;
         transform.forward = cameraPositions[index].forward;
     }
 }

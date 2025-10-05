@@ -5874,8 +5874,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 12
-      minScalar: 8
+      scalar: 22
+      minScalar: 16
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -10493,7 +10493,7 @@ MonoBehaviour:
   animator: {fileID: 1755472141}
   inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   throttleIncrement: 0.3
-  maxThrottle: 100
+  maxThrottle: 150
   responsiveness: 15
   bankingFactor: 0.3
   levelReturnSpeed: 8
