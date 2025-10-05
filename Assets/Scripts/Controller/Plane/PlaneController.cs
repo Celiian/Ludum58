@@ -21,7 +21,7 @@ public class PlaneController : MonoBehaviour
     public float responsiveness = 10f;
 
     [Tooltip("How much the plane banks when yawing (0 = no banking, 1 = full banking)")]
-    public float bankingFactor = 0.3f;
+    public float bankingFactor = 0.6f;
 
     [Tooltip("How quickly the plane returns to level flight")]
     public float levelReturnSpeed = 2f;
