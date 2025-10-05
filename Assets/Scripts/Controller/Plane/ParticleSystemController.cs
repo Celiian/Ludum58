@@ -25,7 +25,7 @@ public class ParticleSystemController : MonoBehaviour
         emissionModule.enabled = true;
         
         if (!_particleSystem.isPlaying)
-        {   
+        {
             _particleSystem.Play();
         }
     }
