@@ -14,7 +14,12 @@ public class CameraController : MonoBehaviour
     private int index = 0;
     private Vector3 target;
 
+    private bool cameraLocked = true;
+
     private void Update(){
+
+        if(cameraLocked) return;
+        
         if(Input.GetKeyDown(KeyCode.Alpha1)) index = 0;
         else if(Input.GetKeyDown(KeyCode.Alpha2)) index = 1;
         else if(Input.GetKeyDown(KeyCode.Alpha3)) index = 2;
@@ -25,8 +30,17 @@ public class CameraController : MonoBehaviour
 
     }
 
+    // Method to switch to gameplay camera (index 0) when Play is clicked
+    public void SwitchToGameplayCamera()
+    {
+        index = 0;
+        target = cameraPositions[index].position;
+        cameraLocked = false;
+    }
+
     private void FixedUpdate()
     {
+        if(cameraLocked) return;
         transform.position = Vector3.Lerp(transform.position, target, moveSpeed * Time.deltaTime);
         transform.forward = cameraPositions[index].forward;
     }

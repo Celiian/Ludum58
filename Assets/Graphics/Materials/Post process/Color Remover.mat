@@ -103,8 +103,8 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Color_1_Blend: 1
-    - _Color_2_Blend: 1
+    - _Color_1_Blend: 0
+    - _Color_2_Blend: 0
     - _Color_3_Blend: 0
     - _Color_4_Blend: 1
     - _Cull: 2

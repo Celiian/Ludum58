@@ -43,6 +43,9 @@ public class PlaneController : MonoBehaviour
 
     private float currentYaw = 0f;
 
+    // Game state control
+    private bool isGameplayActive = false;
+
     // Input Actions
     private InputAction rollAction;
     private InputAction pitchAction;
@@ -74,6 +77,9 @@ public class PlaneController : MonoBehaviour
     }
 
     private void HandleInputs(){
+        // Only handle inputs if gameplay is active
+        if (!isGameplayActive) return;
+        
         // Get input values from Input System
         if (pitchAction != null) currentPitch = pitchAction.ReadValue<float>();
         if (yawAction != null) currentYaw = yawAction.ReadValue<float>();
@@ -124,6 +130,28 @@ public class PlaneController : MonoBehaviour
             inputActions.FindActionMap("Plane")?.Disable();
         }
     }
+
+    // Public method to start gameplay (called by MenuManager)
+    public void StartGameplay()
+    {
+        isGameplayActive = true;
+    }
+
+    // Public getters for tutorial system
+    public float GetCurrentThrottle()
+    {
+        return currentThrottle;
+    }
+
+    public float GetCurrentPitch()
+    {
+        return currentPitch;
+    }
+
+    public float GetCurrentYaw()
+    {
+        return currentYaw;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -132,6 +160,9 @@ public class PlaneController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Only apply physics if gameplay is active
+        if (!isGameplayActive) return;
+        
         // Apply forward thrust
         rb.AddForce(transform.forward * (maxThrottle * currentThrottle));
 
