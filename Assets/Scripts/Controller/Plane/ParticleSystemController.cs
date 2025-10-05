@@ -3,7 +3,7 @@ using UnityEngine;
 public class ParticleSystemController : MonoBehaviour
 {
     [Header("Particle System")]
-    [SerializeField] private ParticleSystem particleSystem;
+    [SerializeField] private ParticleSystem _particleSystem;
     
     [Header("Water Detection")]
     [SerializeField] private float raycastDistance = 100f;
@@ -12,42 +12,21 @@ public class ParticleSystemController : MonoBehaviour
     [SerializeField] private float activationDistance = 20f;
     
     [Header("Particle Settings")]
-    [SerializeField] private float minEmissionRate = 10f;
+    [SerializeField] private float minEmissionRate = 0f;
     [SerializeField] private float maxEmissionRate = 100f;
     
     [Header("Plane Reference")]
     [SerializeField] private PlaneController planeController;
     
     private ParticleSystem.EmissionModule emissionModule;
-    
     private void Start()
-    {
-        if (particleSystem == null)
-            particleSystem = GetComponent<ParticleSystem>();
-            
-        if (particleSystem == null)
-        {
-            Debug.LogError("ParticleSystemController: No ParticleSystem found!");
-            enabled = false;
-            return;
-        }
-        
-        if (planeController == null)
-            planeController = FindObjectOfType<PlaneController>();
-            
-        if (planeController == null)
-        {
-            Debug.LogError("ParticleSystemController: No PlaneController found!");
-            enabled = false;
-            return;
-        }
-        
-        emissionModule = particleSystem.emission;
+    {   
+        emissionModule = _particleSystem.emission;
         emissionModule.enabled = true;
         
-        if (!particleSystem.isPlaying)
-        {
-            particleSystem.Play();
+        if (!_particleSystem.isPlaying)
+        {   
+            _particleSystem.Play();
         }
     }
     
@@ -68,6 +47,13 @@ public class ParticleSystemController : MonoBehaviour
         if (distanceToSea > activationDistance)
         {
             // Too high - no particles
+            emissionModule.rateOverTime = 0f;
+            return;
+        }
+        
+        // If not moving, no particles
+        if (planeSpeed <= 0.1f)
+        {
             emissionModule.rateOverTime = 0f;
             return;
         }
@@ -112,11 +98,11 @@ public class ParticleSystemController : MonoBehaviour
     
     private void PositionParticlesAtSeaLevel()
     {
-        if (particleSystem == null) return;
+        if (_particleSystem == null) return;
         
         Vector3 currentPos = transform.position;
         Vector3 seaLevelPos = new Vector3(currentPos.x, seaLevelY, currentPos.z);
-        particleSystem.transform.position = seaLevelPos;
+        _particleSystem.transform.position = seaLevelPos;
     }
     
     private void OnDrawGizmosSelected()
