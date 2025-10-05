@@ -98,15 +98,15 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Blend: 1
+    - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Color_1_Blend: 1
-    - _Color_2_Blend: 1
-    - _Color_3_Blend: 1
-    - _Color_4_Blend: 1
+    - _Color_1_Blend: 0
+    - _Color_2_Blend: 0
+    - _Color_3_Blend: 0
+    - _Color_4_Blend: 0
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1

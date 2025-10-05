@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlaneController : MonoBehaviour
 {
 
+    public AudioSource audioSource;
     public Animator animator;
 
     [Header("Input")]
@@ -164,7 +165,9 @@ public class PlaneController : MonoBehaviour
         {
             float planeSpeed = rb.linearVelocity.magnitude;
             animator.SetFloat("FlySpeed", planeSpeed );
+            audioSource.volume = planeSpeed / 100f / 4;
         }
+
         // Add stabilization forces to return to horizontal when no yaw input
         //Abs of currentYaw in't enough apparently for the condition to be true despite being correct when logged
         if (Mathf.Abs(currentYaw) <= 0.1f && yawAction?.IsPressed() == false) {
