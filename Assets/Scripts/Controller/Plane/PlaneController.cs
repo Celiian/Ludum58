@@ -22,7 +22,7 @@ public class PlaneController : MonoBehaviour
     public float responsiveness = 10f;
 
     [Tooltip("How much the plane banks when yawing (0 = no banking, 1 = full banking)")]
-    public float bankingFactor = 0.3f;
+    public float bankingFactor = 0.6f;
 
     [Tooltip("How quickly the plane returns to level flight")]
     public float levelReturnSpeed = 2f;
@@ -43,6 +43,9 @@ public class PlaneController : MonoBehaviour
     private float currentRoll = 0f;
 
     private float currentYaw = 0f;
+
+    // Game state control
+    private bool isGameplayActive = false;
 
     // Input Actions
     private InputAction rollAction;
@@ -75,6 +78,9 @@ public class PlaneController : MonoBehaviour
     }
 
     private void HandleInputs(){
+        // Only handle inputs if gameplay is active
+        if (!isGameplayActive) return;
+        
         // Get input values from Input System
         if (pitchAction != null) currentPitch = pitchAction.ReadValue<float>();
         if (yawAction != null) currentYaw = yawAction.ReadValue<float>();
@@ -125,6 +131,28 @@ public class PlaneController : MonoBehaviour
             inputActions.FindActionMap("Plane")?.Disable();
         }
     }
+
+    // Public method to start gameplay (called by MenuManager)
+    public void StartGameplay()
+    {
+        isGameplayActive = true;
+    }
+
+    // Public getters for tutorial system
+    public float GetCurrentThrottle()
+    {
+        return currentThrottle;
+    }
+
+    public float GetCurrentPitch()
+    {
+        return currentPitch;
+    }
+
+    public float GetCurrentYaw()
+    {
+        return currentYaw;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -133,6 +161,9 @@ public class PlaneController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Only apply physics if gameplay is active
+        if (!isGameplayActive) return;
+        
         // Apply forward thrust
         rb.AddForce(transform.forward * (maxThrottle * currentThrottle));
 
