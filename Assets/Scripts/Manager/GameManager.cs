@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject endMenuCanvas;
     
+    [SerializeField]
+    private GameObject lightHouse;
+    private MoveLightHouse _moveLightHouse;
+    
     [Header("Debug")]
     public List<GameObject> collected;
     public bool isGameFinished = false;
@@ -35,6 +39,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        _moveLightHouse = lightHouse.GetComponent<MoveLightHouse>();
+    }
+
     void Update()
     {
         if (canFinishGame) return;
@@ -42,6 +51,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("All collected!");
             canFinishGame = true;
+            _moveLightHouse.MoveLightHouseToYZero();
         }
     }
 
