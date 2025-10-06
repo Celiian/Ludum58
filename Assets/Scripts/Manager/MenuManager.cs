@@ -8,7 +8,9 @@ public class MenuManager : MonoBehaviour
     public Button QuitButton;
     public Button OptionsButton;
     public Button BackButton;
+    public Button ReversePitchButton;
 
+    
     [Header("UI Canvas")]   
     public GameObject menuCanvas;
     public GameObject optionsCanvas;
@@ -35,6 +37,9 @@ public class MenuManager : MonoBehaviour
 
         if (BackButton != null)
             BackButton.onClick.AddListener(OnBackClicked);
+
+        if (ReversePitchButton != null)
+            ReversePitchButton.onClick.AddListener(ReversePitch);
     }
 
     private void OnPlayClicked()
@@ -78,5 +83,12 @@ public class MenuManager : MonoBehaviour
     {
         menuCanvas.SetActive(true);
         optionsCanvas.SetActive(false);
+    }
+
+
+    private void ReversePitch()
+    {
+        if (planeController != null)
+            planeController.TogglePitchReversal();
     }
 }
