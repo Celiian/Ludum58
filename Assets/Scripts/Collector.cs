@@ -25,6 +25,9 @@ public class Collector : MonoBehaviour
     {
         if (other.CompareTag("Player") && !isTriggered)
         {
+            if (isTriggered) return;
+            GameManager.Instance.collected.Add(gameObject);
+            
             isTriggered = true;
             StartCoroutine(TransitionColor());
             visualEffect.gameObject.SetActive(true);

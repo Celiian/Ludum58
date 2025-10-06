@@ -77,6 +77,7 @@ public class PlaneController : MonoBehaviour
     private bool isCrashing = false;
     private bool isCrashPredicted = false;
     private float lastCrashCheckTime = 0f;
+    private bool isRespawning = false;
     private float crashPredictionStartTime = 0f;
 
     // Input Actions
@@ -111,7 +112,7 @@ public class PlaneController : MonoBehaviour
 
     private void HandleInputs(){
         // Only handle inputs if gameplay is active and not crashing
-        if (!isGameplayActive || isCrashing) return;
+        if (!isGameplayActive || isCrashing || GameManager.Instance.isGameFinished || isRespawning) return;
         
         // Get input values from Input System
         if (pitchAction != null) 
@@ -172,6 +173,11 @@ public class PlaneController : MonoBehaviour
     public void StartGameplay()
     {
         isGameplayActive = true;
+    }
+
+    public void StopGameplay()
+    {
+        isGameplayActive = false;
     }
 
     // Public getters for tutorial system
@@ -236,7 +242,7 @@ public class PlaneController : MonoBehaviour
         else
         {
             // Start fade to black immediately
-            yield return StartCoroutine(FadeToBlack());
+            yield return StartCoroutine(FadeToBlack(fadeDuration));
         }
         
         // Teleport to water position
@@ -253,12 +259,12 @@ public class PlaneController : MonoBehaviour
     }
 
     // Fade to black
-    private IEnumerator FadeToBlack()
+    public IEnumerator FadeToBlack(float duration)
     {
         if (fadeScreen != null)
         {
-            fadeScreen.FadeToBlack(fadeDuration);
-            yield return new WaitForSeconds(fadeDuration);
+            fadeScreen.FadeToBlack(duration);
+            yield return new WaitForSeconds(duration);
         }
     }
 
@@ -365,7 +371,7 @@ public class PlaneController : MonoBehaviour
         
         isCrashPredicted = true;
         crashPredictionStartTime = Time.time;
-        StartCoroutine(FadeToBlack());
+        StartCoroutine(FadeToBlack(fadeDuration));
     }
 
     // Update is called once per frame
@@ -398,6 +404,45 @@ public class PlaneController : MonoBehaviour
             }
         }
     }
+
+    public void RespawnPlaneOnExit()
+    {
+        Debug.Log("Respawning plane on exit");
+        StartCoroutine(RespawnPlane());
+        
+    }
+
+    private IEnumerator RespawnPlane()
+    {
+        
+        isRespawning=true;
+        if (fadeScreen != null)
+        {
+            fadeScreen.FadeToBlack(fadeDuration);
+            yield return new WaitForSeconds(fadeDuration);
+        }
+        
+        // Téléporte l'avion à la position de respawn dans l'eau et le réinitialise
+        TeleportToWater();
+        ResetPlaneState();
+        
+        // Tourne l'avion pour qu'il regarde vers l'avant (axe Z positif)
+        transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
+        
+        // Réactive le gameplay si besoin
+        isCrashing = false;
+        isCrashPredicted = false;
+        isGameplayActive = true;
+        isRespawning=false;
+        
+        if (fadeScreen != null)
+        {
+            fadeScreen.FadeFromBlack(fadeDuration);
+            yield return new WaitForSeconds(fadeDuration);
+        }
+        
+    }
+    
 
     private void FixedUpdate()
     {
