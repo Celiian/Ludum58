@@ -8,7 +8,10 @@ public class MenuManager : MonoBehaviour
     public Button QuitButton;
     public Button OptionsButton;
     public Button BackButton;
-    public Button ReversePitchButton;
+    public Toggle ReversePitchToggle;
+    
+    [Header("Toggle State")]
+    private bool isPitchReversed = false;
 
     
     [Header("UI Canvas")]   
@@ -19,7 +22,7 @@ public class MenuManager : MonoBehaviour
     public CameraController cameraController;
     public PlaneController planeController;
     public TutorialUiManager tutorialManager;
-
+    public CollectorDetector collectorDetector;
     private void Start()
     {
         // Set up button listeners
@@ -38,15 +41,15 @@ public class MenuManager : MonoBehaviour
         if (BackButton != null)
             BackButton.onClick.AddListener(OnBackClicked);
 
-        if (ReversePitchButton != null)
-            ReversePitchButton.onClick.AddListener(ReversePitch);
+        if (ReversePitchToggle != null)
+        {
+            ReversePitchToggle.onValueChanged.AddListener(OnPitchToggleChanged);
+            ReversePitchToggle.isOn = isPitchReversed; // Initialize toggle state
+        }
     }
 
     private void OnPlayClicked()
-    {
-        Debug.Log("Play button clicked!");
-        
-        
+    {        
         // Switch camera to gameplay view (index 0)
         if (cameraController != null)
             cameraController.SwitchToGameplayCamera();
@@ -64,6 +67,9 @@ public class MenuManager : MonoBehaviour
             menuCanvas.SetActive(false);
         else
             gameObject.SetActive(false); // Fallback if no canvas assigned
+
+        if (collectorDetector != null)
+            collectorDetector.isPlaying = true;
     }
 
     private void OnQuitClicked()
@@ -86,9 +92,11 @@ public class MenuManager : MonoBehaviour
     }
 
 
-    private void ReversePitch()
+    private void OnPitchToggleChanged(bool value)
     {
+        isPitchReversed = value;
+        
         if (planeController != null)
-            planeController.TogglePitchReversal();
+            planeController.SetPitchReversal(isPitchReversed);
     }
 }

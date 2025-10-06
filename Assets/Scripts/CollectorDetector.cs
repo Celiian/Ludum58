@@ -13,9 +13,10 @@ public class CollectorDetector : MonoBehaviour {
     public float minSound = 0.2f;
     public float interval = 0f;
     public List<AudioClip> audioClips = new List<AudioClip>();
-
+    public bool isPlaying = false;
 
     void Update() {
+        if (!isPlaying) { return; }
 
         collectors = collectors.Where(collector => !collector.isTriggered).ToList();
         if (collectors.Count == 0) {
@@ -38,5 +39,4 @@ public class CollectorDetector : MonoBehaviour {
             timer = 0f;
         }
     }
-
 }
