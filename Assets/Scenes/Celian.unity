@@ -242,6 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 0b425a49e711146369d3fdbcd5c3e15e, type: 2}
   colorName: _Color_1_Blend
+  transitionDuration: 3
 --- !u!1001 &97439142
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -640,6 +641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 0b425a49e711146369d3fdbcd5c3e15e, type: 2}
   colorName: _Color_4_Blend
+  transitionDuration: 3
 --- !u!135 &313306157
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1312,6 +1314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 0b425a49e711146369d3fdbcd5c3e15e, type: 2}
   colorName: _Color_2_Blend
+  transitionDuration: 3
 --- !u!1 &464547343
 GameObject:
   m_ObjectHideFlags: 0
@@ -4102,6 +4105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 0b425a49e711146369d3fdbcd5c3e15e, type: 2}
   colorName: _Color_3_Blend
+  transitionDuration: 3
 --- !u!135 &1426861462
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -10500,6 +10504,7 @@ MonoBehaviour:
   maxRollAngle: 30
   rollOvershootTolerance: 10
   rollCorrectionStrength: 0.5
+  reversePitch: 0
 --- !u!23 &8346039705498134190
 MeshRenderer:
   m_ObjectHideFlags: 0
