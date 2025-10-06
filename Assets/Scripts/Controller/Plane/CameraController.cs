@@ -15,17 +15,19 @@ public class CameraController : MonoBehaviour
     private Vector3 target;
     private int previousIndex = -1;
 
+    [SerializeField]
     private bool cameraLocked = true;
+    private bool canChangeCamera = false;
 
     private void Update(){
-
+        
+        if(Input.GetKeyDown(KeyCode.Alpha1) && canChangeCamera) index = 0;
+        else if(Input.GetKeyDown(KeyCode.Alpha2) && canChangeCamera) index = 1;
+        else if(Input.GetKeyDown(KeyCode.Alpha3) && canChangeCamera) index = 2;
+        else if(Input.GetKeyDown(KeyCode.Alpha4) && canChangeCamera) index = 3;
+        
         if(cameraLocked) return;
         
-        if(Input.GetKeyDown(KeyCode.Alpha1)) index = 0;
-        else if(Input.GetKeyDown(KeyCode.Alpha2)) index = 1;
-        else if(Input.GetKeyDown(KeyCode.Alpha3)) index = 2;
-        else if(Input.GetKeyDown(KeyCode.Alpha4)) index = 3;
-
         // If camera position changed, instantly snap to new position
         if(index != previousIndex)
         {
@@ -46,6 +48,16 @@ public class CameraController : MonoBehaviour
         previousIndex = -1; // Force instant snap
         target = cameraPositions[index].position;
         cameraLocked = false;
+        canChangeCamera = true;
+    }
+
+    public void SwitchEndGameCamera()
+    {
+        index = cameraPositions.Length - 1; // Assuming last index is end game view
+        previousIndex = -1; // Force instant snap
+        target = cameraPositions[index].position;
+        // cameraLocked = true;
+        canChangeCamera = false;
     }
 
     private void FixedUpdate()
