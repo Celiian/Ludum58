@@ -5,12 +5,12 @@ public class CameraController : MonoBehaviour
     [Tooltip("An array of transforms representing camera positions")]
     [SerializeField] private Transform[] cameraPositions;
 
-    [Tooltip("The current camera position index")]
-    private int currentCameraPositionIndex = 0;
-
     [Tooltip("The speed at which the camera follows the plane")]
+    [SerializeField] private float minMoveSpeed = 5f;
+    [SerializeField] private float maxMoveSpeed = 15f;
+    [SerializeField] private PlaneController planeController;
+
     private float moveSpeed = 5f;
-    
     private int index = 0;
     private Vector3 target;
     private int previousIndex = -1;
@@ -20,6 +20,8 @@ public class CameraController : MonoBehaviour
     private void Update(){
 
         if(cameraLocked) return;
+
+        moveSpeed = Mathf.Lerp(minMoveSpeed, maxMoveSpeed, planeController.GetCurrentThrottle());
         
         if(Input.GetKeyDown(KeyCode.Alpha1)) index = 0;
         else if(Input.GetKeyDown(KeyCode.Alpha2)) index = 1;

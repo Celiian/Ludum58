@@ -12,7 +12,7 @@ public class ParticleSystemController : MonoBehaviour
     [SerializeField] private float raycastDistance = 100f;
     [SerializeField] private LayerMask seaLayerMask = 1 << 4; // Water layer
     [SerializeField] private float seaLevelY = 0f;
-    [SerializeField] private float activationDistance = 20f;
+    [SerializeField] private float activationDistance = 10f;
     
     [Header("Particle Settings")]
     [SerializeField] private float minEmissionRate = 0f;
@@ -23,6 +23,7 @@ public class ParticleSystemController : MonoBehaviour
     [SerializeField] private PlaneController planeController;
     
     private ParticleSystem.EmissionModule emissionModule;
+     
     private void Start()
     {   
         emissionModule = _particleSystem.emission;
@@ -52,34 +53,35 @@ public class ParticleSystemController : MonoBehaviour
     
     private void UpdateParticleCount(float planeSpeed, float distanceToSea)
     {
-        // Check if close enough to water
-        if (distanceToSea > activationDistance)
-        {
-            // Too high - no particles
-            emissionModule.rateOverTime = 0f;
-            return;
-        }
-        
-        // If not moving, no particles
-        if (planeSpeed <= 0.1f)
-        {
-            emissionModule.rateOverTime = 0f;
-            return;
-        }
-        
         // Higher speed = more particles
         float speedFactor = Mathf.Clamp01(planeSpeed / 20f); // Normalize to 0-1
         
-        // Closer to water = more particles
+        // Closer to water = more particles (gradual falloff beyond activation distance)
         float heightFactor = Mathf.Clamp01(1f - (distanceToSea / activationDistance));
         
         // Combine both factors
         float combinedFactor = (speedFactor + heightFactor) / 2f;
         
-        float emissionRate = Mathf.Lerp(minEmissionRate, maxEmissionRate, combinedFactor);
-        emissionModule.rateOverTime = emissionRate;
+        // Check if close enough to water for particles
+        if (distanceToSea > activationDistance)
+        {
+            // Too high - no particles
+            emissionModule.rateOverTime = 0f;
+        }
+        else if (planeSpeed <= 0.1f)
+        {
+            // If not moving, no particles
+            emissionModule.rateOverTime = 0f;
+        }
+        else
+        {
+            float emissionRate = Mathf.Lerp(minEmissionRate, maxEmissionRate, combinedFactor);
+            emissionModule.rateOverTime = emissionRate;
+        }
         
-        UpdateAudioVolume(emissionRate);
+        // Audio volume should be primarily based on height, with speed as a modifier
+        float audioVolume = heightFactor * speedFactor;
+        UpdateAudioVolume(audioVolume);
     }
     
     private float GetDistanceToSea()
@@ -133,11 +135,11 @@ public class ParticleSystemController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, activationDistance);
     }
     
-    private void UpdateAudioVolume(float emissionRate)
+    private void UpdateAudioVolume(float combinedFactor)
     {
         if (audioSource == null) return;
         
-        float volume = Mathf.Clamp01(emissionRate / maxEmissionRate);
-        audioSource.volume = volume;
+        float volume = Mathf.Clamp01(combinedFactor);
+        audioSource.volume = volume / 2f;
     }
 }
