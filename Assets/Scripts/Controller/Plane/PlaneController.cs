@@ -71,6 +71,7 @@ public class PlaneController : MonoBehaviour
 
     private float currentYaw = 0f;
 
+
     // Game state control
     private bool isGameplayActive = false;
     private bool isCrashing = false;

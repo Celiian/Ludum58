@@ -50,5 +50,6 @@ public class Collector : MonoBehaviour
 
         material.SetFloat(colorName, 1.0f);
         visualEffect.Stop();
+        visualEffect.gameObject.SetActive(false);
     }
 }
