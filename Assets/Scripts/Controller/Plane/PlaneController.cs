@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlaneController : MonoBehaviour
 {
 
+    public AudioSource audioSource;
     public Animator animator;
 
     [Header("Input")]
@@ -21,7 +22,7 @@ public class PlaneController : MonoBehaviour
     public float responsiveness = 10f;
 
     [Tooltip("How much the plane banks when yawing (0 = no banking, 1 = full banking)")]
-    public float bankingFactor = 0.3f;
+    public float bankingFactor = 0.6f;
 
     [Tooltip("How quickly the plane returns to level flight")]
     public float levelReturnSpeed = 2f;
@@ -35,6 +36,10 @@ public class PlaneController : MonoBehaviour
     [Tooltip("How strong the roll correction force is")]
     public float rollCorrectionStrength = 0.5f;
 
+    [Header("Control Options")]
+    [Tooltip("Reverse pitch controls (up becomes down, down becomes up)")]
+    public bool reversePitch = false;
+
     private float currentThrottle = 0f;
 
     private float currentPitch = 0f;
@@ -42,6 +47,9 @@ public class PlaneController : MonoBehaviour
     private float currentRoll = 0f;
 
     private float currentYaw = 0f;
+
+    // Game state control
+    private bool isGameplayActive = false;
 
     // Input Actions
     private InputAction rollAction;
@@ -74,8 +82,15 @@ public class PlaneController : MonoBehaviour
     }
 
     private void HandleInputs(){
+        // Only handle inputs if gameplay is active
+        if (!isGameplayActive) return;
+        
         // Get input values from Input System
-        if (pitchAction != null) currentPitch = pitchAction.ReadValue<float>();
+        if (pitchAction != null) 
+        {
+            float rawPitch = pitchAction.ReadValue<float>();
+            currentPitch = reversePitch ? -rawPitch : rawPitch;
+        }
         if (yawAction != null) currentYaw = yawAction.ReadValue<float>();
         
         // Calculate automatic banking based on yaw input
@@ -124,6 +139,47 @@ public class PlaneController : MonoBehaviour
             inputActions.FindActionMap("Plane")?.Disable();
         }
     }
+
+    // Public method to start gameplay (called by MenuManager)
+    public void StartGameplay()
+    {
+        isGameplayActive = true;
+    }
+
+    // Public getters for tutorial system
+    public float GetCurrentThrottle()
+    {
+        return currentThrottle;
+    }
+
+    public float GetCurrentPitch()
+    {
+        return currentPitch;
+    }
+
+    public float GetCurrentYaw()
+    {
+        return currentYaw;
+    }
+
+    // Public method to toggle pitch reversal
+    public void TogglePitchReversal()
+    {
+        reversePitch = !reversePitch;
+    }
+
+    // Public method to set pitch reversal state
+    public void SetPitchReversal(bool reversed)
+    {
+        reversePitch = reversed;
+    }
+
+    // Public getter for pitch reversal state
+    public bool IsPitchReversed()
+    {
+        return reversePitch;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -132,6 +188,9 @@ public class PlaneController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Only apply physics if gameplay is active
+        if (!isGameplayActive) return;
+        
         // Apply forward thrust
         rb.AddForce(transform.forward * (maxThrottle * currentThrottle));
 
@@ -164,7 +223,9 @@ public class PlaneController : MonoBehaviour
         {
             float planeSpeed = rb.linearVelocity.magnitude;
             animator.SetFloat("FlySpeed", planeSpeed );
+            audioSource.volume = planeSpeed / 100f / 4;
         }
+
         // Add stabilization forces to return to horizontal when no yaw input
         //Abs of currentYaw in't enough apparently for the condition to be true despite being correct when logged
         if (Mathf.Abs(currentYaw) <= 0.1f && yawAction?.IsPressed() == false) {
