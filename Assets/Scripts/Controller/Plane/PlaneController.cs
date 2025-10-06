@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlaneController : MonoBehaviour
 {
@@ -40,6 +41,25 @@ public class PlaneController : MonoBehaviour
     [Tooltip("Reverse pitch controls (up becomes down, down becomes up)")]
     public bool reversePitch = false;
 
+    [Header("Crash System")]
+    [Tooltip("Fade screen component for crash transitions")]
+    public FadeScreen fadeScreen;
+    
+    [Tooltip("Water respawn position")]
+    public Vector3 waterRespawnPosition = new Vector3(-4.53f, 1.4f, 20.47f);
+    
+    [Tooltip("Fade duration in seconds")]
+    public float fadeDuration = 1f;
+    
+    [Tooltip("How far ahead to predict crash (in seconds)")]
+    public float crashPredictionTime = 1f;
+    
+    [Tooltip("How often to check for crash prediction (in seconds)")]
+    public float crashCheckInterval = 0.1f;
+    
+    [Tooltip("Ground layer mask for crash detection")]
+    public LayerMask groundLayerMask = 1 << 6;
+
     private float currentThrottle = 0f;
 
     private float currentPitch = 0f;
@@ -50,6 +70,9 @@ public class PlaneController : MonoBehaviour
 
     // Game state control
     private bool isGameplayActive = false;
+    private bool isCrashing = false;
+    private bool isCrashPredicted = false;
+    private float lastCrashCheckTime = 0f;
 
     // Input Actions
     private InputAction rollAction;
@@ -82,8 +105,8 @@ public class PlaneController : MonoBehaviour
     }
 
     private void HandleInputs(){
-        // Only handle inputs if gameplay is active
-        if (!isGameplayActive) return;
+        // Only handle inputs if gameplay is active and not crashing
+        if (!isGameplayActive || isCrashing) return;
         
         // Get input values from Input System
         if (pitchAction != null) 
@@ -180,23 +203,172 @@ public class PlaneController : MonoBehaviour
         return reversePitch;
     }
 
+    // Collision detection for terrain
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Check if we collided with terrain layer (layer 6 based on the scene data)
+        if (collision.gameObject.layer == 6 && !isCrashing)
+        {
+            StartCoroutine(HandleCrash());
+        }
+    }
+
+    // Handle crash sequence
+    private IEnumerator HandleCrash()
+    {
+        isCrashing = true;
+        
+        // Stop plane physics
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        
+        // If crash was already predicted, we're already fading - just wait for actual collision
+        if (isCrashPredicted)
+        {
+            // Wait for the predicted crash time to complete
+            yield return new WaitForSeconds(crashPredictionTime);
+        }
+        else
+        {
+            // Start fade to black immediately
+            yield return StartCoroutine(FadeToBlack());
+        }
+        
+        // Teleport to water position
+        TeleportToWater();
+        
+        // Reset plane state
+        ResetPlaneState();
+        
+        // Fade back in
+        yield return StartCoroutine(FadeFromBlack());
+        
+        isCrashing = false;
+        isCrashPredicted = false;
+    }
+
+    // Fade to black
+    private IEnumerator FadeToBlack()
+    {
+        if (fadeScreen != null)
+        {
+            fadeScreen.FadeToBlack(fadeDuration);
+            yield return new WaitForSeconds(fadeDuration);
+        }
+    }
+
+    // Fade from black
+    private IEnumerator FadeFromBlack()
+    {
+        if (fadeScreen != null)
+        {
+            fadeScreen.FadeFromBlack(fadeDuration);
+            yield return new WaitForSeconds(fadeDuration);
+        }
+    }
+
+    // Teleport plane to water position
+    private void TeleportToWater()
+    {
+        transform.position = waterRespawnPosition;
+        transform.rotation = Quaternion.identity;
+        
+        // Reset rigidbody
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    // Reset plane state after crash
+    private void ResetPlaneState()
+    {
+        currentThrottle = 0f;
+        currentPitch = 0f;
+        currentRoll = 0f;
+        currentYaw = 0f;
+    }
+
+    // Predict if a crash is unavoidable
+    private bool PredictCrash()
+    {
+        if (isCrashing || isCrashPredicted) return false;
+        
+        // Calculate future position based on current velocity and trajectory
+        Vector3 currentVelocity = rb.linearVelocity;
+        Vector3 predictedPosition = transform.position + (currentVelocity * crashPredictionTime);
+        
+        // Raycast from current position towards predicted position
+        Vector3 rayDirection = (predictedPosition - transform.position).normalized;
+        float rayDistance = Vector3.Distance(transform.position, predictedPosition);
+        
+        // Also check current trajectory
+        Vector3 currentDirection = currentVelocity.normalized;
+        
+        // Cast multiple rays to check for ground collision
+        RaycastHit hit;
+        
+        // Primary raycast in current movement direction
+        if (Physics.Raycast(transform.position, currentDirection, out hit, rayDistance, groundLayerMask))
+        {
+            float timeToCollision = hit.distance / currentVelocity.magnitude;
+            
+            // If collision will happen within prediction time, crash is unavoidable
+            if (timeToCollision <= crashPredictionTime && currentVelocity.magnitude > 0.1f)
+            {
+                return true;
+            }
+        }
+        
+        // Secondary raycast downward to check for ground proximity
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 50f, groundLayerMask))
+        {
+            float timeToGround = hit.distance / Mathf.Abs(currentVelocity.y);
+            
+            // If plane is moving downward and will hit ground within prediction time
+            if (currentVelocity.y < -0.1f && timeToGround <= crashPredictionTime)
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // Start early crash sequence when crash is predicted
+    private void StartPredictedCrash()
+    {
+        if (isCrashPredicted || isCrashing) return;
+        
+        isCrashPredicted = true;
+        StartCoroutine(FadeToBlack());
+    }
+
     // Update is called once per frame
     void Update()
     {
         HandleInputs();
+        
+        // Check for crash prediction at regular intervals
+        if (isGameplayActive && !isCrashing && !isCrashPredicted)
+        {
+            if (Time.time - lastCrashCheckTime >= crashCheckInterval)
+            {
+                lastCrashCheckTime = Time.time;
+                
+                if (PredictCrash())
+                {
+                    StartPredictedCrash();
+                }
+            }
+        }
     }
 
     private void FixedUpdate()
     {
-        // Only apply physics if gameplay is active
-        if (!isGameplayActive) return;
+        // Only apply physics if gameplay is active and not crashing
+        if (!isGameplayActive || isCrashing) return;
         
         // Apply forward thrust
         rb.AddForce(transform.forward * (maxThrottle * currentThrottle));
-
-        print("currentRoll: " + currentRoll);
-        print("currentYaw: " + currentYaw);
-
         
         // Apply rotational forces
         // rb.AddTorque(transform.right * (currentPitch * responseModifier)); // Pitch (nose up/down)
