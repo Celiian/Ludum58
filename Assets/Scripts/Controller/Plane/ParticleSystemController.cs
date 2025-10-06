@@ -5,6 +5,9 @@ public class ParticleSystemController : MonoBehaviour
     [Header("Particle System")]
     [SerializeField] private ParticleSystem _particleSystem;
     
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    
     [Header("Water Detection")]
     [SerializeField] private float raycastDistance = 100f;
     [SerializeField] private LayerMask seaLayerMask = 1 << 4; // Water layer
@@ -27,6 +30,11 @@ public class ParticleSystemController : MonoBehaviour
         if (!_particleSystem.isPlaying)
         {
             _particleSystem.Play();
+        }
+        
+        if (audioSource != null)
+        {
+            audioSource.volume = 0f;
         }
     }
     
@@ -69,6 +77,8 @@ public class ParticleSystemController : MonoBehaviour
         
         float emissionRate = Mathf.Lerp(minEmissionRate, maxEmissionRate, combinedFactor);
         emissionModule.rateOverTime = emissionRate;
+        
+        UpdateAudioVolume(emissionRate);
     }
     
     private float GetDistanceToSea()
@@ -114,5 +124,13 @@ public class ParticleSystemController : MonoBehaviour
         // Show activation area
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, activationDistance);
+    }
+    
+    private void UpdateAudioVolume(float emissionRate)
+    {
+        if (audioSource == null) return;
+        
+        float volume = Mathf.Clamp01(emissionRate / maxEmissionRate);
+        audioSource.volume = volume;
     }
 }
