@@ -27,7 +27,7 @@ public class Collector : MonoBehaviour
         {
             if (isTriggered) return;
             GameManager.Instance.collected.Add(gameObject);
-            
+            MainMusicManager.Instance.NextMusic();
             isTriggered = true;
             StartCoroutine(TransitionColor());
             visualEffect.gameObject.SetActive(true);

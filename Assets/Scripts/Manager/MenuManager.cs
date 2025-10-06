@@ -19,7 +19,7 @@ public class MenuManager : MonoBehaviour
     public CameraController cameraController;
     public PlaneController planeController;
     public TutorialUiManager tutorialManager;
-
+    public CollectorDetector collectorDetector;
     private void Start()
     {
         // Set up button listeners
@@ -43,10 +43,7 @@ public class MenuManager : MonoBehaviour
     }
 
     private void OnPlayClicked()
-    {
-        Debug.Log("Play button clicked!");
-        
-        
+    {        
         // Switch camera to gameplay view (index 0)
         if (cameraController != null)
             cameraController.SwitchToGameplayCamera();
@@ -64,6 +61,9 @@ public class MenuManager : MonoBehaviour
             menuCanvas.SetActive(false);
         else
             gameObject.SetActive(false); // Fallback if no canvas assigned
+
+        if (collectorDetector != null)
+            collectorDetector.isPlaying = true;
     }
 
     private void OnQuitClicked()
