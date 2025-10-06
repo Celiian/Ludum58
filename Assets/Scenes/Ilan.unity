@@ -744,7 +744,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 489
+      value: -384
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -752,7 +752,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 513
+      value: -551
       objectReference: {fileID: 0}
     - target: {fileID: 2284085873176898543, guid: 535d2df64c8d2444fb424eba431d728b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1036,6 +1036,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4005629645308209219, guid: 911557609093a4f68aecf399684ed045, type: 3}
+      propertyPath: m_DetailObjectDistance
+      value: 169
+      objectReference: {fileID: 0}
     - target: {fileID: 4328145087882792205, guid: 911557609093a4f68aecf399684ed045, type: 3}
       propertyPath: m_Name
       value: Worldwater
