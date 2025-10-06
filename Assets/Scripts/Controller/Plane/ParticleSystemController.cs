@@ -17,6 +17,7 @@ public class ParticleSystemController : MonoBehaviour
     [Header("Particle Settings")]
     [SerializeField] private float minEmissionRate = 0f;
     [SerializeField] private float maxEmissionRate = 100f;
+    [SerializeField] private float forwardOffset = 5f;
     
     [Header("Plane Reference")]
     [SerializeField] private PlaneController planeController;
@@ -40,8 +41,8 @@ public class ParticleSystemController : MonoBehaviour
     
     private void Update()
     {
-        // Keep particles at sea level
-        PositionParticlesAtSeaLevel();
+        // Position particles in front of plane at sea level
+        PositionParticlesInFrontOfPlane();
         
         float distanceToSea = GetDistanceToSea();
         float planeSpeed = GetPlaneSpeed();
@@ -106,13 +107,19 @@ public class ParticleSystemController : MonoBehaviour
         return planeRb.linearVelocity.magnitude;
     }
     
-    private void PositionParticlesAtSeaLevel()
+    private void PositionParticlesInFrontOfPlane()
     {
-        if (_particleSystem == null) return;
+        if (_particleSystem == null || planeController == null) return;
         
-        Vector3 currentPos = transform.position;
-        Vector3 seaLevelPos = new Vector3(currentPos.x, seaLevelY, currentPos.z);
-        _particleSystem.transform.position = seaLevelPos;
+        // Get plane's forward direction
+        Vector3 planeForward = planeController.transform.forward;
+        
+        // Calculate position in front of plane at sea level
+        Vector3 planePos = planeController.transform.position;
+        Vector3 frontPosition = planePos + planeForward * forwardOffset;
+        frontPosition.y = seaLevelY;
+        
+        _particleSystem.transform.position = frontPosition;
     }
     
     private void OnDrawGizmosSelected()
