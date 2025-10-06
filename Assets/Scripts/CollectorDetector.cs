@@ -15,7 +15,6 @@ public class CollectorDetector : MonoBehaviour {
     public List<AudioClip> audioClips = new List<AudioClip>();
     public bool isPlaying = false;
 
-
     void Update() {
         if (!isPlaying) { return; }
 
@@ -40,5 +39,4 @@ public class CollectorDetector : MonoBehaviour {
             timer = 0f;
         }
     }
-
 }
