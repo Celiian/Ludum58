@@ -59,6 +59,9 @@ public class PlaneController : MonoBehaviour
     
     [Tooltip("Ground layer mask for crash detection")]
     public LayerMask groundLayerMask = 1 << 6;
+    
+    [Tooltip("Water layer mask for water detection")]
+    public LayerMask waterLayerMask = 1 << 4;
 
     private float currentThrottle = 0f;
 
@@ -68,12 +71,14 @@ public class PlaneController : MonoBehaviour
 
     private float currentYaw = 0f;
 
+
     // Game state control
     private bool isGameplayActive = false;
     private bool isCrashing = false;
     private bool isCrashPredicted = false;
     private float lastCrashCheckTime = 0f;
     private bool isRespawning = false;
+    private float crashPredictionStartTime = 0f;
 
     // Input Actions
     private InputAction rollAction;
@@ -312,27 +317,47 @@ public class PlaneController : MonoBehaviour
         // Cast multiple rays to check for ground collision
         RaycastHit hit;
         
-        // Primary raycast in current movement direction
-        if (Physics.Raycast(transform.position, currentDirection, out hit, rayDistance, groundLayerMask))
+        // Primary raycast in current movement direction - check for both water and terrain
+        if (Physics.Raycast(transform.position, currentDirection, out hit, rayDistance, groundLayerMask | waterLayerMask))
         {
             float timeToCollision = hit.distance / currentVelocity.magnitude;
             
-            // If collision will happen within prediction time, crash is unavoidable
+            // If collision will happen within prediction time
             if (timeToCollision <= crashPredictionTime && currentVelocity.magnitude > 0.1f)
             {
-                return true;
+                // Check if we hit water first - if so, don't predict crash
+                if (waterLayerMask == (waterLayerMask | (1 << hit.collider.gameObject.layer)))
+                {
+                    return false; // Water is encountered first, no crash prediction
+                }
+                
+                // Only predict crash if we hit terrain
+                if (groundLayerMask == (groundLayerMask | (1 << hit.collider.gameObject.layer)))
+                {
+                    return true;
+                }
             }
         }
         
         // Secondary raycast downward to check for ground proximity
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 50f, groundLayerMask))
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 50f, groundLayerMask | waterLayerMask))
         {
             float timeToGround = hit.distance / Mathf.Abs(currentVelocity.y);
             
-            // If plane is moving downward and will hit ground within prediction time
+            // If plane is moving downward and will hit something within prediction time
             if (currentVelocity.y < -0.1f && timeToGround <= crashPredictionTime)
             {
-                return true;
+                // Check if we hit water first - if so, don't predict crash
+                if (waterLayerMask == (waterLayerMask | (1 << hit.collider.gameObject.layer)))
+                {
+                    return false; // Water is encountered first, no crash prediction
+                }
+                
+                // Only predict crash if we hit terrain
+                if (groundLayerMask == (groundLayerMask | (1 << hit.collider.gameObject.layer)))
+                {
+                    return true;
+                }
             }
         }
         
@@ -345,6 +370,7 @@ public class PlaneController : MonoBehaviour
         if (isCrashPredicted || isCrashing) return;
         
         isCrashPredicted = true;
+        crashPredictionStartTime = Time.time;
         StartCoroutine(FadeToBlack(fadeDuration));
     }
 
@@ -364,6 +390,17 @@ public class PlaneController : MonoBehaviour
                 {
                     StartPredictedCrash();
                 }
+            }
+        }
+        
+        // Check if predicted crash has timed out (no actual collision occurred)
+        if (isCrashPredicted && !isCrashing)
+        {
+            float timeSincePrediction = Time.time - crashPredictionStartTime;
+            if (timeSincePrediction > crashPredictionTime * 2f) // Allow double the prediction time
+            {
+                // If fade started but no collision occurred, force a crash sequence
+                StartCoroutine(HandleCrash());
             }
         }
     }
