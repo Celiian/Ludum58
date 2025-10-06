@@ -36,6 +36,10 @@ public class PlaneController : MonoBehaviour
     [Tooltip("How strong the roll correction force is")]
     public float rollCorrectionStrength = 0.5f;
 
+    [Header("Control Options")]
+    [Tooltip("Reverse pitch controls (up becomes down, down becomes up)")]
+    public bool reversePitch = false;
+
     private float currentThrottle = 0f;
 
     private float currentPitch = 0f;
@@ -82,7 +86,11 @@ public class PlaneController : MonoBehaviour
         if (!isGameplayActive) return;
         
         // Get input values from Input System
-        if (pitchAction != null) currentPitch = pitchAction.ReadValue<float>();
+        if (pitchAction != null) 
+        {
+            float rawPitch = pitchAction.ReadValue<float>();
+            currentPitch = reversePitch ? -rawPitch : rawPitch;
+        }
         if (yawAction != null) currentYaw = yawAction.ReadValue<float>();
         
         // Calculate automatic banking based on yaw input
@@ -153,6 +161,25 @@ public class PlaneController : MonoBehaviour
     {
         return currentYaw;
     }
+
+    // Public method to toggle pitch reversal
+    public void TogglePitchReversal()
+    {
+        reversePitch = !reversePitch;
+    }
+
+    // Public method to set pitch reversal state
+    public void SetPitchReversal(bool reversed)
+    {
+        reversePitch = reversed;
+    }
+
+    // Public getter for pitch reversal state
+    public bool IsPitchReversed()
+    {
+        return reversePitch;
+    }
+
     // Update is called once per frame
     void Update()
     {
