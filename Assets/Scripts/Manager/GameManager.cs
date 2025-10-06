@@ -10,16 +10,17 @@ public class GameManager : MonoBehaviour
     public CameraController cameraController;
     public PlaneController planeController;
     
-    public bool isGameFinished = false;
-    public bool canFinishGame = false;
-    
     [Header("Win condition")]
     [SerializeField]
     private List<GameObject> collectors;
-    public List<GameObject> collected;
     
     [SerializeField]
     private GameObject endMenuCanvas;
+    
+    [Header("Debug")]
+    public List<GameObject> collected;
+    public bool isGameFinished = false;
+    public bool canFinishGame = false;
 
     private void Awake()
     {
@@ -56,6 +57,8 @@ public class GameManager : MonoBehaviour
     {
         yield return planeController.FadeToBlack(duration);
         endMenuCanvas.SetActive(true);
+        // yield return new WaitForSeconds(2f);
+        // endMenuCanvas.GetComponent<CreditsScroller>().StartScrolling();
     }
     
 
