@@ -26111,7 +26111,7 @@ MonoBehaviour:
   animator: {fileID: 1755472141}
   inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   throttleIncrement: 0.3
-  maxThrottle: 115
+  maxThrottle: 100
   responsiveness: 15
   bankingFactor: 0.3
   levelReturnSpeed: 8

@@ -28,6 +28,7 @@ public class MainMusicManager : MonoBehaviour {
             audioSource1.volume = maxVolume;
             audioSource1.clip = mainMusic[currentMusicIndex];
             audioSource1.Play();
+            currentMusicIndex += 1;
             return;
         }
         StartCoroutine(CrossfadeToNextMusic());
